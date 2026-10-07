@@ -2,20 +2,21 @@ import { Component, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Layout } from "@web/search/layout";
 import { useService } from "@web/core/utils/hooks";
-import { rpc } from "@web/core/network/rpc";
 import { DashboardItem } from "./dashboard_item/dashboard_item";
+import { PieChart } from "./pie_chart/pie_chart";
 
 class AwesomeDashboard extends Component {
     static template = "awesome_dashboard.AwesomeDashboard";
-    static components = { Layout, DashboardItem  };
+    static components = { Layout, DashboardItem, PieChart   };
 
     setup() {
         this.action = useService("action");
+        const statisticsService = useService("awesome_dashboard.statistics");
         this.display = {
             controlPanel: {},
         };
         onWillStart(async () => {
-            this.statistics = await rpc("/awesome_dashboard/statistics");
+            this.statistics = await statisticsService.loadStatistics();
         });
     }
 
